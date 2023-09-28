@@ -101,7 +101,7 @@ const Contact = () => {
               <div className="form-group">
                 <Input
                   label="Ho va ten"
-                  placeholder="Nhap ten"
+                  placeholder=""
                   required
                   {...register("name")}
                   // value={form.name}

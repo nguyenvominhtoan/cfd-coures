@@ -7,6 +7,7 @@ export const Input = ({
   onChange,
   type = "text",
   error,
+  renderInput = undefined,
   ...inputProps
 }) => {
   return (
@@ -15,13 +16,15 @@ export const Input = ({
       <label className="label">
         {label} {required && <span>*</span>}
       </label>
-      <input
-        value={value}
-        onChange={onChange}
-        type={type}
-        {...inputProps}
-        className={`form__input ${!!error ? "formerror" : ""}`}
-      />
+      {renderInput?.(inputProps) || (
+        <input
+          value={value}
+          onChange={onChange}
+          type={type}
+          {...inputProps}
+          className={`form__input ${!!error ? "formerror" : ""}`}
+        />
+      )}
       <p className="error">{error || ""}</p>
     </div>
   );

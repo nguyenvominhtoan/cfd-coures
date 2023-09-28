@@ -1,3 +1,4 @@
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Accordion from "../../components/Accordion";
@@ -10,17 +11,15 @@ const CourseDetail = () => {
   const id = slugSplit[slugSplit.length - 1];
   console.log("id", id);
 
-  const style = {
-    h2: {
-      fontSize: "inherit",
-      margin: "inherit",
-      fontFamily: "inherit",
-      lineHeight: "inherit",
-    },
+  const h2 = {
+    fontSize: "inherit",
+    margin: "inherit",
+    fontFamily: "inherit",
+    lineHeight: "inherit",
   };
   useEffect(() => {
     if (slug) {
-      fetch(`http://54.179.36.174:8080/api/v1/courses/${slug}`)
+      fetch(`https://cfdcourses.cfdcircle.vn/api/v1/courses/${slug}`)
         .then((res) => res.json())
         .then((res) => {
           setCourse(res?.data);
@@ -31,7 +30,8 @@ const CourseDetail = () => {
   console.log("courseDetail", course);
 
   // thu vien momentjs format time
-
+  const formatDay = moment(course?.startDate).format("DD/MM/YYYY");
+  const formatCourse = moment(course?.schedule?.startDate).format("DD/MM/YYYY");
   return (
     <div>
       {" "}
@@ -44,7 +44,7 @@ const CourseDetail = () => {
               <div className="infor">
                 <div className="infor__item">
                   <label className="label --white">Khai giảng</label>
-                  <p className="title --t3 --white">04/05/2023</p>
+                  <p className="title --t3 --white">{formatDay}</p>
                 </div>
                 <div className="infor__item">
                   <label className="label --white">Thời lượng</label>
@@ -52,7 +52,7 @@ const CourseDetail = () => {
                 </div>
                 <div className="infor__item">
                   <label className="label --white">Hình thức</label>
-                  <p className="title --t3 --white">Offline | Online</p>
+                  <p className="title --t3 --white">Online/Offline</p>
                 </div>
               </div>
               {/* Chưa đăng ký */}
@@ -187,9 +187,7 @@ const CourseDetail = () => {
                   <div className="info">
                     <div className="labeltext">
                       <span className="label --blue">Khai giảng</span>
-                      <p className="title --t3">
-                        {course?.schedule?.startDate}
-                      </p>
+                      <p className="title --t3">{formatCourse}</p>
                     </div>
                     <div className="labeltext">
                       <span className="label --blue">Ngày học</span>

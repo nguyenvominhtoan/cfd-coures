@@ -15,15 +15,15 @@ const index = () => {
     loading,
     error,
   } = useQuery(() => courseService.getCourse());
-  console.log("courses", courses, loading);
+  // console.log("courses", courses);
 
   // useEffect(() => {
-  // courseService
-  //   .getCourse()
-  //   .then((res) => {
-  //     setCourses(res.data?.data?.courses || []);
-  //   })
-  //   .catch((error) => console.log("error", error));
+  //   courseService
+  //     .getCourse()
+  //     .then((res) => {
+  //       setCourses(res.data?.data?.courses || []);
+  //     })
+  //     .catch((error) => console.log("error", error));
   //   const fetchCourse = async () => {
   //     try {
   //       setLoading(true);

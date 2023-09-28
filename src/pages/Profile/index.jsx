@@ -1,7 +1,8 @@
 import React from "react";
+import MyInfo from "./MyInfo";
 
 const Profile = () => {
-  return <div> </div>;
+  return <>{/* <MyInfo /> */}</>;
 };
 
 export default Profile;

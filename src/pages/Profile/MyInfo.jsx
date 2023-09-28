@@ -1,82 +1,126 @@
-import React from "react";
+import { message } from "antd";
+import React, { useEffect, useState } from "react";
+import { useAuthen } from "../../components/AuthenContext";
+import Input from "../../components/Input";
+import { LOCAL_STORAGE } from "../../config/localStorage";
+import { authService } from "../../services/authService";
+import { validate } from "../../utils/validate";
 
 const MyInfo = () => {
+  const { profileInfo } = useAuthen();
+  const [form, setForm] = useState({});
+  const token = LOCAL_STORAGE.token;
+  console.log(token);
+  const [errors, setErrors] = useState({
+    password: "****",
+  });
+  const rules = {
+    firstName: [{ required: true, message: "Vui lòng nhập" }],
+    email: [{ required: true }, { regex: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/ }],
+    phone: [{ required: true }, { regex: /(84|0[3|5|7|8|9])+([0-9]{8})\b/ }],
+    facebookURL: [{ required: true, message: "Vui lòng nhập" }],
+    website: [{ required: true, message: "Vui lòng nhập" }],
+    introduce: [{ required: true, message: "Vui lòng nhập" }],
+  };
+  const onSubmit = async (ev) => {
+    ev.preventDefault();
+    // call api again
+    try {
+      const errorObject = validate(rules, form);
+      setErrors(errorObject);
+
+      //check error => error ? fail : success
+      if (Object.keys(errorObject)?.length === 0) {
+        errors = {};
+        alert("Submit success");
+      } else {
+        console.log("errors", errors);
+      }
+      const res = await authService.updateProfile(form, token);
+      if (res.status) {
+        message.success("Update Profile Succes");
+      }
+    } catch (error) {
+      message.error("Update Profile Fail");
+    }
+  };
+  useEffect(() => {
+    if (profileInfo) {
+      setForm({ ...form, ...profileInfo });
+    }
+  }, [profileInfo]);
+  const register = (fieldName) => {
+    return {
+      value: form[fieldName],
+      error: errors[fieldName],
+      onChange: (ev) => {
+        setForm({ ...form, [fieldName]: ev.target.value });
+      },
+    };
+  };
   return (
     <div>
       {" "}
       <div className="tab__content-item" style={{ display: "block" }}>
-        <form action="#" className="form">
+        <form action="#" className="form" onSubmit={onSubmit}>
           <div className="form-container">
             <div className="form-group">
-              <label className="label">
-                Họ và tên <span>*</span>
-              </label>
-              <input
-                defaultValue="Nghĩa Trần"
-                type="text"
-                className="form__input formerror"
+              <Input
+                label="Họ và tên"
+                placeholder="Vui lòng nhập tên"
+                required
+                {...register("firstName")}
               />
-              <div className="error">Vui lòng nhập họ và tên</div>
             </div>
             <div className="form-group">
-              <label className="label">
-                Số điện thoại <span>*</span>
-              </label>
-              <input
-                defaultValue={"0989596913"}
-                type="text"
-                className="form__input"
+              <Input
+                label="Số điện thoại"
+                placeholder="Vui lòng nhập số điện thoại"
+                required
+                {...register("phone")}
               />
             </div>
           </div>
           <div className="form-container">
             <div className="form-group">
-              <label className="label">
-                Email <span>*</span>
-              </label>
-              <input
-                defaultValue="trannghia2018@gmail.com"
+              <Input
+                label="Email"
+                placeholder="Vui lòng nhập email"
+                required
                 disabled
-                type="email"
-                className="form__input"
+                {...register("email")}
               />
             </div>
             <div className="form-group">
-              <div className="form-grouppass">
-                <label className="label">
-                  Mật khẩu <span>*</span>
-                </label>
-                <div className="textchange btnmodal" data-modal="mdchangepass">
-                  Đổi mật khẩu
-                </div>
-              </div>
-              <input
-                defaultValue={12345568900}
-                type="password"
+              <Input
+                label="Mật khẩu"
                 disabled
-                className="form__input"
+                required
+                {...register("password")}
               />
             </div>
           </div>
           <div className="form-group">
-            <label className="label">Facebook URL</label>
-            <input
-              defaultValue="https://nghiatran.info"
-              type="text"
-              className="form__input"
-              placeholder
+            <Input
+              label="Facebook"
+              placeholder="Vui lòng nhập url"
+              required
+              {...register("facebookURL")}
             />
           </div>
           <div className="form-group">
-            <label className="label">Website</label>
-            <input defaultValue type="text" className="form__input" />
+            <Input
+              label="Website"
+              placeholder="Vui lòng nhập url"
+              required
+              {...register("website")}
+            />
           </div>
           <div className="form-container textarea">
-            <label className="label">Giới thiệu bản thân</label>
-            <textarea
-              className="form__input"
-              name="content"
-              defaultValue={""}
+            <Input
+              label="Giới thiệu bản thân"
+              {...register("introduce")}
+              renderInput={(inputProps) => <textarea {...inputProps} />}
             />
           </div>
           <p className="noti">Cập nhận thông tin thành công</p>

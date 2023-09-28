@@ -1,8 +1,17 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { PATHS } from "../config";
+import { useAuthen } from "./AuthenContext";
 
 const Header = () => {
+  const {
+    setIsAuthenModalOpen,
+    isAuthenModalOpen,
+    profileInfo,
+    onLogOut,
+    openAuthenModal,
+  } = useAuthen();
+  console.log("profileInfo id", profileInfo?.id);
   return (
     <header className="header --bgwhite">
       <div className="container-fluid">
@@ -83,7 +92,7 @@ const Header = () => {
               data-dropdown="userlogged__dropdown"
             >
               <div className="userlogged__avatar-img user__img">
-                <img src="/img/avatar_nghia.jpg" alt="Avatar teacher" />
+                <img src="img/avatar_nghia.jpg" alt="Avatar teacher" />
               </div>
               <i className="userlogged__avatar-icon">
                 <svg
@@ -100,23 +109,35 @@ const Header = () => {
             <div className="userlogged__dropdown dropdown">
               <div className="userlogged__dropdown-info">
                 <div className="user__img">
-                  <img src="/img/avatar_nghia.jpg" alt="Avatar teacher" />
+                  <img src="img/avatar_nghia.jpg" alt="Avatar teacher" />
                 </div>
-                <Link to="/profile" className="user__info">
+                <a href="student-profile.html" className="user__info">
                   <p className="title --t4">
-                    <strong>Trần Nghĩa</strong>
+                    <strong>{profileInfo?.firstName || ""}</strong>
                   </p>
                   <span className="email">Thông tin tài khoản</span>
-                </Link>
+                </a>
               </div>
               <div className="userlogged__dropdown-list">
-                <Link to={PATHS.COURSES}>Khóa học của tôi</Link>
+                <Link to={PATHS.PROFILE.COURSES}>Khóa học của tôi</Link>
                 <Link to={PATHS.PROFILE.PAYMENT}>Lịch sử thanh toán</Link>
                 <Link to={PATHS.CONTACT}>Hỗ trợ</Link>
-                <a href="#">
-                  Đăng xuất{" "}
+                <a
+                  href="#"
+                  onClick={(ev) => {
+                    console.log("click");
+                    ev.preventDefault();
+                    if (profileInfo?.id) {
+                      onLogOut();
+                    } else {
+                      openAuthenModal();
+                    }
+                  }}
+                >
+                  {profileInfo?.id ? "Đăng xuất" : "Đăng nhập"}
+                  {""}
                   <i>
-                    <img src="/img/iconlogout.svg" alt="" />
+                    <img src="img/iconlogout.svg" alt="" />
                   </i>
                 </a>
               </div>
