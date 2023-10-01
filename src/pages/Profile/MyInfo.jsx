@@ -7,7 +7,7 @@ import { authService } from "../../services/authService";
 import { validate } from "../../utils/validate";
 
 const MyInfo = () => {
-  const { profileInfo } = useAuthen();
+  const { profileInfo, setProfileInfo } = useAuthen({});
   const [form, setForm] = useState({});
   const token = LOCAL_STORAGE.token;
   console.log(token);
@@ -38,6 +38,7 @@ const MyInfo = () => {
       }
       const res = await authService.updateProfile(form, token);
       if (res.status) {
+        setProfileInfo(res?.data?.data);
         message.success("Update Profile Succes");
       }
     } catch (error) {

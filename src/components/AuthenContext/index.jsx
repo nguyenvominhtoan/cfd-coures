@@ -7,6 +7,9 @@ const AuthenContext = createContext({});
 export const AuthenProvider = ({ children }) => {
   const [isAuthenModalOpen, setisAuthenModalOpen] = useState(false);
   const [profileInfo, setprofileInfo] = useState({});
+  const [courseInfo, setCourseInfo] = useState([]);
+  const [paymentInfo, setPaymentInfo] = useState([]);
+
   useEffect(() => {
     const accesToken = localStorage.getItem(LOCAL_STORAGE.token);
     if (accesToken) {
@@ -14,7 +17,7 @@ export const AuthenProvider = ({ children }) => {
       onGetProfile(accesToken);
     }
   }, []);
-
+  console.log("courseInfo", courseInfo);
   const onGetProfile = async (token) => {
     const profileRes = await authService.getProfile(token);
     console.log("profileRes", profileRes?.data?.data);
@@ -87,7 +90,12 @@ export const AuthenProvider = ({ children }) => {
         onLogin,
         onRegister,
         // onGetProfile,
+        setprofileInfo,
         onLogOut,
+        courseInfo,
+        paymentInfo,
+        setCourseInfo,
+        setPaymentInfo,
       }}
     >
       {children}

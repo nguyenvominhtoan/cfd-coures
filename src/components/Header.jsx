@@ -111,12 +111,12 @@ const Header = () => {
                 <div className="user__img">
                   <img src="img/avatar_nghia.jpg" alt="Avatar teacher" />
                 </div>
-                <a href="student-profile.html" className="user__info">
+                <Link to={PATHS.PROFILE.INDEX} className="user__info">
                   <p className="title --t4">
                     <strong>{profileInfo?.firstName || ""}</strong>
                   </p>
                   <span className="email">Thông tin tài khoản</span>
-                </a>
+                </Link>
               </div>
               <div className="userlogged__dropdown-list">
                 <Link to={PATHS.PROFILE.COURSES}>Khóa học của tôi</Link>

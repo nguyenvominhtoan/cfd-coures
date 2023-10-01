@@ -1,7 +1,27 @@
-import React from "react";
-import { NavLink, Outlet } from "react-router-dom";
-
+import React, { useEffect } from "react";
+import { Link, Navigate, NavLink, Outlet } from "react-router-dom";
+import { useAuthen } from "../components/AuthenContext";
+import { PATHS } from "../config";
+import { LOCAL_STORAGE } from "../config/localStorage";
+import { oderService } from "../services/oderService";
 const ProfileLayout = () => {
+  const token = localStorage.getItem(LOCAL_STORAGE.token);
+  const { profileInfo, setCourseInfo, setPaymentInfo } = useAuthen();
+  if (!token) {
+    return <Navigate to="/" />;
+  }
+  const { firstName, email, phone, introduce } = profileInfo || {};
+  const onGetCourseHistories = async () => {
+    const res = await oderService.getCourseHistories(token);
+    if (res?.data?.data) {
+      const mapCourse = res?.data?.data?.order.map((order) => order?.couse);
+      setCourseInfo(mapCourse ?? []);
+    }
+  };
+  useEffect(() => {
+    onGetCourseHistories();
+  }, []);
+
   return (
     <div>
       {" "}
@@ -16,24 +36,20 @@ const ProfileLayout = () => {
                       <img src="/img/avatar_nghia.jpg" alt="avatar" />
                     </div>
                   </div>
-                  <h3 className="title --t3">Trần Nghĩa</h3>
+                  <h3 className="title --t3">{firstName}</h3>
                 </div>
               </div>
               <div className="sidebar__content">
                 <h4>Giới thiệu</h4>
-                <p className="description">
-                  Cheerful, cafeful,friendly. I like listening to music,
-                  traveling and coding, listening to music, traveling and
-                  coding.
-                </p>
+                <p className="description">{introduce}</p>
                 <ul>
                   <li>
                     <img src="/img/icon-mail-outline.svg" alt="icon" />
-                    <span>trannghia2018@gmail.com</span>
+                    <span>{email}</span>
                   </li>
                   <li>
                     <img src="/img/icon-phone-outline.svg" alt="icon" />
-                    <span>098 9596 913</span>
+                    <span>{phone}</span>
                   </li>
                   <li>
                     <img src="/img/icon-link.svg" alt="icon" />
@@ -61,8 +77,8 @@ const ProfileLayout = () => {
                   <NavLink end to="/profile">
                     Thông tin cá nhân
                   </NavLink>
-                  <NavLink to="/profile/my-courses">Khóa học của tôi</NavLink>
-                  <NavLink to="/profile/my-payment">Lịch sử thanh toán</NavLink>
+                  <Link to={PATHS.PROFILE.COURSES}>Khóa học của tôi</Link>
+                  <Link to={PATHS.PROFILE.PAYMENT}>Lịch sử thanh toán</Link>
                 </div>
                 <div className="tab__content">
                   {/* Outlet */}

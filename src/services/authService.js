@@ -15,7 +15,6 @@ export const authService = {
       },
     });
   },
-
   updateProfile(payload = {}, token = "") {
     return axios.put(`${BASE_URL}/customer/profiles`, payload, {
       headers: {
